@@ -1,0 +1,63 @@
+---
+
+version: '2'
+services:
+  jenkins:
+    environment: 
+      - DISPLAY=:10
+    image: jenkins:alpine
+    build: ./jenkins
+    restart: unless-stopped 
+    ports:
+      - "80:8080"
+      - "4444:4444"
+      - "50000:50000"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+
+  selenium-standalone-firefox:
+    environment:
+      - DISPLAY=:10
+    image: selenium/standalone-firefox
+    build: ./selenium-standalone-firefox
+    ports:
+      - "5555:5555"
+    restart: unless-stopped
+    links:
+      - jenkins
+
+#  firefox-alpine:
+#    environment:
+#      - DISPLAY=:10
+#    image: firefox:alpine 
+#    build: ./alpine-firefox
+#    ports:
+#      - "5555:5555"
+#    restart: unless-stopped
+#    links:
+#      - jenkins
+
+#  firefox:
+#    environment:
+#      - DISPLAY=:10
+#    image: selenium/node-firefox
+#    build: ./selenium-node-firefox
+#    ports:
+#      - "5555:5555"
+#    restart: unless-stopped 
+#    links:
+#      - jenkins
+
+#  chrome:
+#    environment:
+#      - DISPLAY=:10
+#    image: selenium/node-chrome 
+#    build: ./selenium-node-chrome
+#    ports:
+#      - "5556:5556"
+#    restart: unless-stopped 
+#    links:
+#      - jenkins
+
+volumes:
+    jenkins_data: 
